@@ -91,8 +91,9 @@ mongoose.connect(
 )
     .then(() => {
 
-        app.listen(5000, () => {
-            console.log('App listening on port 5000!');
+        // PORT is a env provided by heroku, if not available use localhost
+        app.listen(process.env.PORT || 5000, () => {
+            console.log('App listening !');
         });
     })
     .catch((err) => {
