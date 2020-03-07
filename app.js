@@ -1,3 +1,6 @@
+// Allows environment variables in .env file
+require('dotenv').config()
+
 const fs = require('fs')
 const path = require('path')
 

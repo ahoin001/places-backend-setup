@@ -1,9 +1,0 @@
-{
-    "env": {
-        "DB_USER" : "alex",
-        "DB_PASSWORD" : "Alex9595",
-        "DB_NAME": "MERNPlaces",
-        "GOOGLE_API_KEY": "AIzaSyDENeDUDcQ9tKV709ReXdOSME5fQsC-Rm4",
-        "JWT_PRIVATE_KEY": "supersecretstring"
-    }
-}

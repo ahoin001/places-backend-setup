@@ -174,15 +174,8 @@ const login = async (req, res, next) => {
 
     console.log(`*********************`, token)
     //  console.log(`*********************`,exsistingUser.id)
-    //  console.log(`*********************`,exsistingUser._id)
-
+    
     res.status(201).json({ userId: exsistingUser.id, email: exsistingUser.email, token: token })
-
-    // return object with user data that can be used
-    // res.json({
-    //     message: 'Logged in!',
-    //     user: exsistingUser.toObject({ getters: true })
-    // })
 
 }
 
