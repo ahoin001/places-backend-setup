@@ -32,6 +32,7 @@ const getUsers = async (req, res, next) => {
 
 const signup = async (req, res, next) => {
 
+    // console.log('REQ.FILE&&&&&&&&',req.file)
     // Make sure user inputs are valid
     const errors = validationResult(req)
 
@@ -71,12 +72,12 @@ const signup = async (req, res, next) => {
         return next(new HttpError('Failed hashing password', 500))
     }
 
-
+    https://res.cloudinary.com/damclaohv/image/upload/v1583551613/PLACES/f8rzs1mhzlfevgfy4sej.jpg
     // Places will automatically be added when a place is created by a user
     const createdUser = new User({
         name,
         email,
-        image: req.file.path,
+        image: req.file.url,
         password: hashedPassword,
         places: []
 
