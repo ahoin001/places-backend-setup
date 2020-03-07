@@ -16,7 +16,7 @@ const HttpError = require('./models/http-error')
 // Import Routers instead of cluttering this file with different routes
 const placesRoutes = require('./routes/places-routes')
 const userRoutes = require('./routes/users-routes')
-
+var cors = require('cors')
 /*
     Middleware is run top to bottom, and requests are passed to next middleware with next() or if a response was sent which would satisfy request (Only one Response allowed per request)
 */
@@ -25,31 +25,33 @@ const userRoutes = require('./routes/users-routes')
 // converts requests into req.body, has next() built in
 app.use(bodyParser.json());
 
-// express.static used to return requested file, static returns a file, does not excecute it, expects an absolute path
-// path 
-app.use('/uploads/images', express.static(path.join('uploads', 'images')))
+app.use(cors())
 
-app.use((req, res, next) => {
+// app.use((req, res, next) => {
 
-    // Allow *(any) domain to send requests to this back end 
-    res.setHeader('Access-Control-Allow-Origin', '*')
+//     // Allow *(any) domain to send requests to this back end 
+//     res.setHeader('Access-Control-Allow-Origin', '*')
 
-    // Specify what headers will be allowed
-    res.setHeader('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization')
+//     // Specify what headers will be allowed
+//     res.setHeader('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization')
 
-    // Specify the http methods that will be allowed 
-    res.setHeader('Access-Control-Allow-METHODS', 'GET, POST, PATCH, DELETE')
+//     // Specify the http methods that will be allowed 
+//     res.setHeader('Access-Control-Allow-METHODS', 'GET, POST, PATCH, DELETE')
 
-    // Move to next middleware
-    next()
+//     // Move to next middleware
+//     next()
 
-});
+// });
 
 
 // .use excecutes on all requests (get,post,put etc) that start with http://localhost:5000/api/places
 app.use('/api/places', placesRoutes); // => /api/places/...
 
 app.use('/api/users', userRoutes); // => /api/places/...
+
+app.use((req, res, next) => {
+    res.send("Up and running");
+});
 
 
 // If no response was sent or error handled from previous routes,
@@ -63,6 +65,8 @@ app.use((req, res, next) => {
 // In middleware functions with 4 params, we have access to error , only excecuted by responses where error was thrown
 // If any errors are thrown in middleware above, response here is json with error message accessible with message property
 app.use((error, req, res, next) => {
+
+    // TODO Implement a rollback on failed sign ups
 
     // If there was any errors, delete(rollback) any file we recieved 
     // if (req.file) {
