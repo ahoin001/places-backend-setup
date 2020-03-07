@@ -65,14 +65,14 @@ app.use((req, res, next) => {
 app.use((error, req, res, next) => {
 
     // If there was any errors, delete(rollback) any file we recieved 
-    if (req.file) {
+    // if (req.file) {
 
-        fs.unlink(req.file.path, (err) => {
-            console.log(err)
-        }
-        )
+    //     fs.unlink(req.file.path, (err) => {
+    //         console.log(err)
+    //     }
+    //     )
 
-    }
+    // }
 
     if (res.headerSent) {
         return next(error)

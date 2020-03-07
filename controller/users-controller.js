@@ -174,8 +174,82 @@ const login = async (req, res, next) => {
 
     console.log(`*********************`, token)
     //  console.log(`*********************`,exsistingUser.id)
-    
+
     res.status(201).json({ userId: exsistingUser.id, email: exsistingUser.email, token: token })
+
+}
+
+const deleteUser = async (req, res, next) => {
+
+    const userId = req.params.pid
+    let placeToDelete;
+
+    try {
+
+        // Populate, instead of only returning creator ref id, populate will return the entire document associated with the id
+        // TLDR Returns place and 'creator' property will have access to document that matches it's _id  https://stackoverflow.com/questions/38051977/what-does-populate-in-mongoose-mean
+        placeToDelete = await Place.findById(placeId).populate('creator')
+
+
+    } catch (error) {
+
+        return next(
+            new HttpError('Something went wrong, failed deleting place', 500)
+        )
+
+    }
+
+    if (!placeToDelete) {
+        return next(
+            new HttpError('Failed to find place to delete', 404)
+        )
+    }
+
+    // Make sure only user that made place can delete the place
+    if (placeToDelete.creator.id !== req.userData.userID) {
+        const error = new HttpError('Users can only delete places they added', 401);
+        return next(error)
+    }
+
+    const imagePath = placeToDelete.image
+
+    try {
+
+        // TODO Understand this better
+
+        // Start session to start transaction
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+
+        // Remove place to delete from Places collection and refer to current session
+        await placeToDelete.remove({ session: sess });
+
+        // For the places property in the found user document, pull place we need to delete
+        // pull will behind the scenes establish connection between the models, 
+        // pull then grabs placeToDelete unique id to know what document to remove from our users places (Check User schema)
+        placeToDelete.creator.places.pull(placeToDelete);
+
+        // Update user(creator) with new place array with the place removed using save()
+        // ** NOTE Because I populated creator (look above) I have access to user model through creator from place models reference
+        await placeToDelete.creator.save({ session: sess })
+
+        // All changes will be saved here, or cancelled if one fails
+        await sess.commitTransaction();
+
+    } catch (error) {
+
+        return next(
+            new HttpError('Failed to delete place', 500)
+        )
+
+    }
+
+    // deletes files with path
+    fs.unlink(imagePath, err => {
+        console.log(`Error deleting image`, err)
+    })
+
+    res.status(200).json({ message: 'Deleted Place' })
 
 }
 
