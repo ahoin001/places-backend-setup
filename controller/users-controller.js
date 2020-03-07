@@ -72,7 +72,6 @@ const signup = async (req, res, next) => {
         return next(new HttpError('Failed hashing password', 500))
     }
 
-    https://res.cloudinary.com/damclaohv/image/upload/v1583551613/PLACES/f8rzs1mhzlfevgfy4sej.jpg
     // Places will automatically be added when a place is created by a user
     const createdUser = new User({
         name,

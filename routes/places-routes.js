@@ -3,8 +3,8 @@ const express = require('express')
 // Returns Router Object from express object
 const router = express.Router()
 
-// Multer storage and file handling configuration I created 
-const fileUpload = require('../middleware/file-upload')
+// Multer storage and file handling configuration to upload to cloudinary 
+const cloudUpload = require('../middleware/cloudUpload')
 
 const checkAuth = require('../middleware/check-auth')
 
@@ -28,7 +28,7 @@ router.use(checkAuth)
 // Add validation checks on request
 router.post(
     '/',
-    fileUpload.single('image'),
+    cloudUpload.single('image'),
     [
         check('title')
             .not()
