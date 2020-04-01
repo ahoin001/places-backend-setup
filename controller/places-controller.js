@@ -44,7 +44,8 @@ const createPlace = async (req, res, next) => {
         address,
         location: coordinates,
         image: req.file.url,
-        creator: req.userData.userID
+        // * check-auth added this property with userId from jwt
+        creator: req.userData.userID 
     });
 
     let user;

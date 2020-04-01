@@ -96,14 +96,14 @@ const signup = async (req, res, next) => {
     }
 
 
-    // * NOTE Creating jsonwebtoken 
+    // * Creating jsonwebtoken on sign up
     let token;
     try {
 
         // Issue maybe here with id (__id if getter didn't set in creating user)
         token = jwt.sign(
-            { userId: createdUser.id, email: createdUser.email },
-            process.env.JWT_PRIVATE_KEY,
+            { userId: createdUser.id, email: createdUser.email }, 
+            process.env.JWT_PRIVATE_KEY, // private key used to generate
             { expiresIn: '1h' } // third argument is config object with properties we can change values of 
         )
     } catch (error) {
@@ -112,7 +112,7 @@ const signup = async (req, res, next) => {
         return next(error)
     }
 
-    // Can send back anything
+    // Can send back anything, but include token to use in front end
     res.status(201).json({ userId: createdUser.id, email: createdUser.email, token: token })
 
     // return object with user data that can be used
@@ -156,7 +156,7 @@ const login = async (req, res, next) => {
         return next(new HttpError('Login failed, inavalid password ', 403))
     }
 
-    // * NOTE Creating jsonwebtoken 
+    // * NOTE Creating jsonwebtoken on login
     let token;
     try {
 

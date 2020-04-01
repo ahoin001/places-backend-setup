@@ -1,9 +1,5 @@
-// Allows environment variables in .env file
+// Loads .env file contents into | process.env
 require('dotenv').config()
-
-const fs = require('fs')
-const path = require('path')
-
 
 const express = require('express')
 const app = express();
